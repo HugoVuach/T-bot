@@ -4,6 +4,7 @@ scikit-learn
 matplotlib
 websocket-client
 requests
-streamlit  # pour le dashboard
-transformers  # pour le LLM
-torch  # pour les réseaux de neurones
+streamlit
+transformers
+torch
+pyyaml
