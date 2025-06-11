@@ -8,3 +8,4 @@ streamlit
 transformers
 torch
 pyyaml
+streamlit

@@ -27,7 +27,7 @@ def on_message(ws, message):
     """
     data = json.loads(message)
     data_buffer.append(data)
-
+    print("Nouveau message reçu :", data)  # Ajoute ce print pour debug
 
 def on_error(ws, error):
     """
@@ -50,7 +50,9 @@ def on_open(ws):
     Appelée automatiquement quand la connexion WebSocket s’ouvre et que tu es prêt à envoyer des messages.
     """
     # Exemple : souscrire au ticker Apple & Tesla
-    symbols = ["AAPL", "TSLA"]
+    #symbols = ["AAPL", "TSLA"]
+    symbols = ["BINANCE:BTCUSDT"]
+
     for symbol in symbols:
         subscribe_message = json.dumps({
             "type": "subscribe",
@@ -60,8 +62,8 @@ def on_open(ws):
 
 def start_finnhub_ws():
     """
-    Crée l’URL de connexion WebSocket en ajoutant ta clé API
-    Crée l’objet WebSocketApp avec les callbacks (on_open, on_message, on_error, on_close).
+    Crée l'URL de connexion WebSocket en ajoutant ta clé API
+    Crée l'objet WebSocketApp avec les callbacks (on_open, on_message, on_error, on_close).
     Lance la connexion dans un thread parallèle pour ne pas bloquer ton programme principal.
     Ce thread va tourner indéfiniment tant que la connexion est active
     """
