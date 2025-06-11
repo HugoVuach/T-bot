@@ -9,3 +9,4 @@ transformers
 torch
 pyyaml
 streamlit
+pyqtgraph
