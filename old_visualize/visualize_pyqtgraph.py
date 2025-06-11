@@ -26,8 +26,8 @@ class LiveGraph(QMainWindow):
         self.setCentralWidget(self.plot_widget)
 
         # 3. Stockage rolling window
-        self.timestamps = deque(maxlen=200)  # stocker timestamps epoch
-        self.prices     = deque(maxlen=200)
+        self.timestamps = deque(maxlen=400)  # stocker timestamps epoch
+        self.prices     = deque(maxlen=400)
         
 
         # 4. Courbe

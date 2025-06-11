@@ -1,4 +1,4 @@
-# data/data_manager.py
+# data_manager.py
 
 import time
 from data.market_data import data_buffer

@@ -1,10 +1,12 @@
-# data/market_data.py
+# market_data.py
 
 import websocket
 import json
 import threading
 import yaml
 import time
+
+from esthetic.upgrade_form import pretty_print_data, convert_to_dataframe
 
 
 # Lecture de la clé API depuis config.yaml
@@ -13,7 +15,10 @@ with open('config/config.yaml', 'r') as file:
     FINNHUB_API_KEY = config['finnhub']['api_key']
 
 
-    data_buffer = []
+data_buffer = []
+message_count = 1  # Compteur global pour arrêter après 5 messages
+
+
 
 def on_message(ws, message):
     """
@@ -22,12 +27,27 @@ def on_message(ws, message):
 
         ws : l'objet WebSocket actif
         message : le message reçu du WebSocket
-
-    À améliorer plus tard : remplacer print(...) par une fonction qui alimente un buffer ou qui envoie la donnée dans ton moteur de stratégie.
     """
+    global message_count
+
+    # Décoder le JSON reçu
     data = json.loads(message)
-    data_buffer.append(data)
-    print("Nouveau message reçu :", data)  # Ajoute ce print pour debug
+
+    # Convertir en DataFrame
+    data_buffer = convert_to_dataframe([data])
+
+    # Ajouter le DataFrame au buffer
+    #data_buffer.append(df)
+    print(f"\nMessage numéro {message_count} reçu :")
+    print( data_buffer)
+
+    print("#" * 80)
+
+
+    message_count += 1
+    if message_count >= 6:
+        print("5 messages reçus. Arrêt du WebSocket.")
+        ws.close()
 
 def on_error(ws, error):
     """
