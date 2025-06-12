@@ -5,6 +5,7 @@ import json
 import threading
 import yaml
 import time
+import pandas as pd
 
 from esthetic.upgrade_form import pretty_print_data, convert_to_dataframe
 
@@ -16,6 +17,7 @@ with open('config/config.yaml', 'r') as file:
 
 
 data_buffer = []
+last_stats = {}
 message_count = 1  # Compteur global pour arrêter après 5 messages
 
 
@@ -34,45 +36,53 @@ def on_message(ws, message):
 
     print(f"\nMessage numéro {message_count} reçu :")
     print(df)
+    print("-" * 80)
+    calculate_btc_stats_per_second()
     print("#" * 80)
 
-    # Calculer et afficher la moyenne par seconde
-    calculate_and_print_average_per_second()
 
     message_count += 1
-    if message_count >= 6:
+    if message_count >= 11:
         print("5 messages reçus. Arrêt du WebSocket.")
         ws.close()
 
 
-    message_count += 1
-    if message_count >= 6:
-        print("5 messages reçus. Arrêt du WebSocket.")
-        ws.close()
-
-
-def calculate_and_print_average_per_second():
+def calculate_btc_stats_per_second():
     """
-    Concatène tous les trades reçus et calcule la moyenne du prix par seconde.
+    Calcule les stats BTC par seconde et détecte si une seconde déjà vue est mise à jour.
+    Affiche uniquement les secondes dont les valeurs changent.
     """
     if not data_buffer:
         return
 
-    # Concaténer tous les DataFrames du buffer
     full_df = pd.concat(data_buffer, ignore_index=True)
 
-    # Extraire la seconde à partir de 'time'
-    # On tronque au format "HH:MM:SS"
+    # Extraire la seconde (HH:MM:SS)
     full_df['second'] = full_df['time'].str.slice(0, 8)
 
-    # Calculer la moyenne du prix par seconde
-    avg_per_second = full_df.groupby('second')['price'].mean()
+    # Groupby avec moyenne pondérée du prix
+    grouped = full_df.groupby('second').apply(
+        lambda g: pd.Series({
+            'mean_price': (g['price'] * g['volume']).sum() / g['volume'].sum(),
+            'total_volume': g['volume'].sum()
+        })
+    ).reset_index()
 
-    # Afficher la dernière seconde seulement (ou tout si tu veux)
-    last_second = avg_per_second.index[-1]
-    last_avg = avg_per_second.iloc[-1]
-    print(f"\n🟢 Moyenne BTC seconde {last_second} : {last_avg:.2f}")
-    print("#" * 80
+    for _, row in grouped.iterrows():
+        sec = row['second']
+        mean_price = round(row['mean_price'], 2)
+        total_volume = round(row['total_volume'], 5)
+
+        previous = last_stats.get(sec)
+
+        if previous is None or previous['mean_price'] != mean_price or previous['total_volume'] != total_volume:
+            print(f"📊 Prix moyen BTC ACTUALISÉ — {sec} : {mean_price} USDT | Volume échangé : {total_volume}")
+            last_stats[sec] = {
+                'mean_price': mean_price,
+                'total_volume': total_volume
+            }
+    print(grouped)
+
 
 def on_error(ws, error):
     """
