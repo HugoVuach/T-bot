@@ -1,15 +1,10 @@
-# main.py
-
-from data.market_data import start_finnhub_ws
-from data.data_manager import start_data_manager
 import threading
+from data.market_data import start_finnhub_ws
+from market_data_visualizer import run_visualizer
 
 if __name__ == "__main__":
-    # Démarrer le WebSocket
-    start_finnhub_ws()
+    # Démarrer la WebSocket Finnhub dans un thread
+    threading.Thread(target=start_finnhub_ws, daemon=True).start()
 
-    # Démarrer le DataManager dans un thread séparé
-    data_manager_thread = threading.Thread(target=start_data_manager)
-    data_manager_thread.start()
-
-    # Tu peux rajouter d'autres threads ici (ex. dashboard)
+    # Démarrer la visualisation dans le thread principal
+    run_visualizer()

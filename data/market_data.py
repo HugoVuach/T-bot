@@ -7,7 +7,7 @@ import yaml
 import time
 import pandas as pd
 
-from esthetic.upgrade_form import pretty_print_data, convert_to_dataframe
+from data.esthetic.upgrade_form import  convert_to_dataframe
 
 
 # Lecture de la clé API depuis config.yaml
@@ -18,12 +18,13 @@ with open('config/config.yaml', 'r') as file:
 
 data_buffer = []
 last_stats = {}
+latest_grouped_df = pd.DataFrame()
 message_count = 1  # Compteur global pour arrêter après 5 messages
 
 
 
 def on_message(ws, message):
-    global message_count, data_buffer
+    global message_count, data_buffer, latest_grouped_df
 
     # Décoder le JSON reçu
     data = json.loads(message)
@@ -37,13 +38,13 @@ def on_message(ws, message):
     print(f"\nMessage numéro {message_count} reçu :")
     print(df)
     print("-" * 80)
-    calculate_btc_stats_per_second()
+    grouped = calculate_btc_stats_per_second()
     print("#" * 80)
 
 
     message_count += 1
     if message_count >= 11:
-        print("5 messages reçus. Arrêt du WebSocket.")
+        print("10 messages reçus. Arrêt du WebSocket.")
         ws.close()
 
 
@@ -52,6 +53,8 @@ def calculate_btc_stats_per_second():
     Calcule les stats BTC par seconde et détecte si une seconde déjà vue est mise à jour.
     Affiche uniquement les secondes dont les valeurs changent.
     """
+    global last_stats
+
     if not data_buffer:
         return
 
@@ -82,6 +85,7 @@ def calculate_btc_stats_per_second():
                 'total_volume': total_volume
             }
     print(grouped)
+    return grouped
 
 
 def on_error(ws, error):
@@ -131,5 +135,5 @@ def start_finnhub_ws():
     wst = threading.Thread(target=ws.run_forever)
     wst.start()
 
-if __name__ == "__main__":
-    start_finnhub_ws()
+#if __name__ == "__main__":
+  #  start_finnhub_ws()
