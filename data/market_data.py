@@ -21,33 +21,58 @@ message_count = 1  # Compteur global pour arrêter après 5 messages
 
 
 def on_message(ws, message):
-    """
-    Fonction appelée à chaque fois qu'un message est reçu du WebSocket Finnhub.Cette fonction est appelée 
-    automatiquement à chaque fois qu’un message arrive via le WebSocket
-
-        ws : l'objet WebSocket actif
-        message : le message reçu du WebSocket
-    """
-    global message_count
+    global message_count, data_buffer
 
     # Décoder le JSON reçu
     data = json.loads(message)
 
     # Convertir en DataFrame
-    data_buffer = convert_to_dataframe([data])
+    df = convert_to_dataframe([data])
 
     # Ajouter le DataFrame au buffer
-    #data_buffer.append(df)
-    print(f"\nMessage numéro {message_count} reçu :")
-    print( data_buffer)
+    data_buffer.append(df)
 
+    print(f"\nMessage numéro {message_count} reçu :")
+    print(df)
     print("#" * 80)
+
+    # Calculer et afficher la moyenne par seconde
+    calculate_and_print_average_per_second()
+
+    message_count += 1
+    if message_count >= 6:
+        print("5 messages reçus. Arrêt du WebSocket.")
+        ws.close()
 
 
     message_count += 1
     if message_count >= 6:
         print("5 messages reçus. Arrêt du WebSocket.")
         ws.close()
+
+
+def calculate_and_print_average_per_second():
+    """
+    Concatène tous les trades reçus et calcule la moyenne du prix par seconde.
+    """
+    if not data_buffer:
+        return
+
+    # Concaténer tous les DataFrames du buffer
+    full_df = pd.concat(data_buffer, ignore_index=True)
+
+    # Extraire la seconde à partir de 'time'
+    # On tronque au format "HH:MM:SS"
+    full_df['second'] = full_df['time'].str.slice(0, 8)
+
+    # Calculer la moyenne du prix par seconde
+    avg_per_second = full_df.groupby('second')['price'].mean()
+
+    # Afficher la dernière seconde seulement (ou tout si tu veux)
+    last_second = avg_per_second.index[-1]
+    last_avg = avg_per_second.iloc[-1]
+    print(f"\n🟢 Moyenne BTC seconde {last_second} : {last_avg:.2f}")
+    print("#" * 80
 
 def on_error(ws, error):
     """
