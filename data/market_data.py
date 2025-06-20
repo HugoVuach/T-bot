@@ -10,6 +10,17 @@ import pandas as pd
 from data.esthetic.upgrade_form import  convert_to_dataframe
 
 
+
+import sys
+import os
+
+# Ajoute le dossier 'dashboard' au chemin d'import
+dashboard_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'dashboard'))
+if dashboard_path not in sys.path:
+    sys.path.append(dashboard_path)
+
+
+
 # Lecture de la clé API depuis config.yaml
 with open('config/config.yaml', 'r') as file:
     config = yaml.safe_load(file)
@@ -43,7 +54,7 @@ def on_message(ws, message):
 
 
     message_count += 1
-    if message_count >= 11:
+    if message_count >= 100:
         print("10 messages reçus. Arrêt du WebSocket.")
         ws.close()
 
@@ -135,5 +146,5 @@ def start_finnhub_ws():
     wst = threading.Thread(target=ws.run_forever)
     wst.start()
 
-#if __name__ == "__main__":
-  #  start_finnhub_ws()
+if __name__ == "__main__":
+    start_finnhub_ws()
