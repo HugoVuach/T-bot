@@ -1,10 +1,9 @@
-import threading
-from data.market_data import start_finnhub_ws
-from market_data_visualizer import run_visualizer
+from PyQt5.QtWidgets import QApplication
+import sys
+from ui.main_window import MainWindow
 
 if __name__ == "__main__":
-    # Démarrer la WebSocket Finnhub dans un thread
-    threading.Thread(target=start_finnhub_ws, daemon=True).start()
-
-    # Démarrer la visualisation dans le thread principal
-    run_visualizer()
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())

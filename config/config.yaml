@@ -1,2 +1,12 @@
 finnhub:
   api_key: "d138sb9r01qv1k0p7mt0d138sb9r01qv1k0p7mtg"
+
+                                             
+
+influxdb :
+  url: "http://localhost:8086"
+  DOCKER_INFLUXDB_INIT_USERNAME : admin
+  DOCKER_INFLUXDB_INIT_PASSWORD : admin0117
+  DOCKER_INFLUXDB_INIT_ORG : tbot_org
+  DOCKER_INFLUXDB_INIT_BUCKET : tbot_bucket
+  DOCKER_INFLUXDB_INIT_ADMIN_TOKEN : secretkeytbot0117 
