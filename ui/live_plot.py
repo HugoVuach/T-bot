@@ -24,21 +24,22 @@ class LivePlotWidget(QWidget):
     @pyqtSlot(object)
     def update_plot(self, df):
         try:
-        #### avec un horodatage 0 1 2 ect pas de heure en direct #########
-            #x = list(range(len(df)))
-            #y = df['mean_price'].values
-            #self.curve.setData(x, y)
-        ##############################################################
+   
             times = df['second'].tolist()  # colonne 'second' = texte genre "10:39:25"
             prices = df['mean_price'].values
 
             x_values = list(range(len(times)))
             self.curve.setData(x=x_values, y=prices)
 
-            # Création d'un dictionnaire de labels horaires
-            ticks = [(i, times[i]) for i in range(len(times))]
+            ### On affiche l'heure à chaque seconde ###
+            #ticks = [(i, times[i]) for i in range(len(times))]
+            
+            ### On affiche un label toutes les 5 secondes ###
+            tick_interval = 5
+            ticks = [(i, times[i]) for i in range(len(times)) if i % tick_interval == 0]
+
             axis = self.plot_widget.getAxis('bottom')
             axis.setTicks([ticks])  # une seule ligne de ticks
-                  
+
         except Exception as e:
             print(f"Erreur mise à jour graphique : {e}")

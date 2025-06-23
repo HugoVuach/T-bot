@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("BTC Live Dashboard")
-        self.resize(1600, 1200)
+        self.resize(1600, 800)
 
         self.plot_widget = LivePlotWidget()
         container = QWidget()
