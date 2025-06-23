@@ -36,7 +36,9 @@ def load_historical_btc_stats_from_binance(hours=10):
     df["volume"] = df["volume"].astype(float)
 
     # Formater la colonne 'second' (HH:MM:SS)
-    df["datetime"] = pd.to_datetime(df["open_time"], unit="ms")
+    #df["datetime"] = pd.to_datetime(df["open_time"], unit="ms")
+    df["datetime"] = pd.to_datetime(df["open_time"], unit="ms", utc=True)
+    df["datetime"] = df["datetime"].dt.tz_convert("Europe/Paris")
     df["second"] = df["datetime"].dt.strftime("%H:%M:%S")
 
     # Calcul des colonnes attendues
@@ -50,4 +52,3 @@ def load_historical_btc_stats_from_binance(hours=10):
 if __name__ == "__main__":
     df = load_historical_btc_stats_from_binance(hours=10)
     print(df.tail())
-    df.to_csv("historical_btc_from_binance.csv", index=False)

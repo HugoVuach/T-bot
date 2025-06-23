@@ -6,8 +6,11 @@ import threading
 import yaml
 import time
 import pandas as pd
+import datetime
 
 from data.esthetic.upgrade_form import  convert_to_dataframe
+from data.load_binance_history import load_historical_btc_stats_from_binance
+
 
 grouped = None
 
@@ -138,6 +141,29 @@ def start_finnhub_ws():
     Lance la connexion dans un thread parallèle pour ne pas bloquer ton programme principal.
     Ce thread va tourner indéfiniment tant que la connexion est active
     """
+    global data_buffer
+
+    # 🔁 Charger les 10h d'historique Binance AVANT le temps réel
+    print("📥 Chargement de l'historique depuis Binance (10h)...")
+    historical_df = load_historical_btc_stats_from_binance(hours=5)
+
+    # Simuler la structure attendue dans le buffer
+    # On crée un DataFrame avec colonnes comme celles du WebSocket
+    simulated_df = pd.DataFrame({
+        "time": historical_df["second"],
+        "price": historical_df["mean_price"],
+        "volume": historical_df["total_volume"]
+    })
+    print(simulated_df.tail())
+    # print(historical_df["datetime"].dt.tz_localize('UTC').tail())
+
+
+    # Ajout dans le buffer global
+    data_buffer.append(simulated_df)
+    print("✅ Historique chargé et inséré dans le buffer.")
+
+    # Ensuite → démarrage du WebSocket
+
     ws_url = f"wss://ws.finnhub.io?token={FINNHUB_API_KEY}"
     ws = websocket.WebSocketApp(ws_url,
                                 on_open=on_open,
