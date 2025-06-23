@@ -141,7 +141,7 @@ def start_finnhub_ws():
     Lance la connexion dans un thread parallèle pour ne pas bloquer ton programme principal.
     Ce thread va tourner indéfiniment tant que la connexion est active
     """
-    global data_buffer
+    global data_buffer,historical_length
 
     # 🔁 Charger les 10h d'historique Binance AVANT le temps réel
     print("📥 Chargement de l'historique depuis Binance (10h)...")
@@ -155,13 +155,14 @@ def start_finnhub_ws():
         "volume": historical_df["total_volume"]
     })
     print(simulated_df.tail())
-    # print(historical_df["datetime"].dt.tz_localize('UTC').tail())
+
 
 
     # Ajout dans le buffer global
     data_buffer.append(simulated_df)
     print("✅ Historique chargé et inséré dans le buffer.")
 
+    
     # Ensuite → démarrage du WebSocket
 
     ws_url = f"wss://ws.finnhub.io?token={FINNHUB_API_KEY}"

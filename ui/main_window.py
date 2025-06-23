@@ -5,14 +5,25 @@ import time
 import pandas as pd
 from data import market_data
 from data.market_data import start_finnhub_ws
+from datetime import datetime
+
+
 
 class DataWorker(QObject):
     data_updated = pyqtSignal(pd.DataFrame)
+
+    #######test
+    started_at = pyqtSignal(datetime)
+    ########
     running = True
 
     def run(self):
         # Démarrage du WebSocket
         start_finnhub_ws()
+        ##########
+        self.start_time = datetime.now()
+        self.started_at.emit(self.start_time) 
+        ############
 
         last_seen = None
         while self.running:
@@ -43,7 +54,18 @@ class MainWindow(QMainWindow):
         self.thread.started.connect(self.worker.run)
         self.worker.data_updated.connect(self.plot_widget.update_plot)
 
+        #############"
+        self.worker.started_at.connect(self.mark_websocket_start)  # ✅ Connexion au slot
+        ##############"
         self.thread.start()
+
+#################""
+    def mark_websocket_start(self, dt):
+   
+        second_str = dt.strftime("%H:%M:%S")
+        self.plot_widget.set_websocket_start_time(second_str)
+
+##################""
 
     def closeEvent(self, event):
         self.worker.running = False

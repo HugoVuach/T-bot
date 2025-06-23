@@ -30,6 +30,15 @@ class LivePlotWidget(QWidget):
         ### synchronisation des axes ###
         self.volume_plot.setXLink(self.plot_widget)
 
+        ###########################""
+        ### Ligne jaune verticale (début du live) ###
+        self.live_start_line = pg.InfiniteLine(angle=90, pen=pg.mkPen('y', width=2, style=pg.QtCore.Qt.DashLine))
+        self.plot_widget.addItem(self.live_start_line)
+        self.live_start_line.hide()
+
+        self.websocket_start_second = None
+        self.websocket_start_marked = False
+        ##############################""
 
         ### lignes de niveau du dernier plus haut et plus bas ###
         self.high_line = pg.InfiniteLine(angle=0, pen=pg.mkPen('g', width=1.5, style=pg.QtCore.Qt.DashLine))
@@ -48,7 +57,20 @@ class LivePlotWidget(QWidget):
         layout.addWidget(self.volume_plot, stretch=1)
         self.setLayout(layout)
 
+        ###############
+    def set_websocket_start_time(self, second_str):
+        self.websocket_start_second = second_str
+        print(f"🟡 Ligne WebSocket prévue à : {second_str}")
+
+    def mark_websocket_start(self, x_position):
+        self.live_start_line.setPos(x_position)
+        self.live_start_line.show()
+        print(f"✅ Ligne jaune affichée à x = {x_position}")
+        ############
+
     @pyqtSlot(object)
+
+
     def update_plot(self, df):
         try:
    
@@ -83,6 +105,16 @@ class LivePlotWidget(QWidget):
                 self.high_label.setPos(last_x, high)
                 self.low_label.setPos(last_x, low)
 
+            ##################
+            ### ✅ Affichage ligne jaune WebSocket ###
+            if not self.websocket_start_marked and self.websocket_start_second:
+                for i, t in enumerate(times):
+                    if t >= self.websocket_start_second:
+                        self.mark_websocket_start(i)
+                        self.websocket_start_marked = True
+                        break
+            ###################
+        
 
         except Exception as e:
             print(f"Erreur mise à jour graphique : {e}")
