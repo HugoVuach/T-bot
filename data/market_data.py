@@ -10,6 +10,8 @@ import datetime
 
 from data.esthetic.upgrade_form import  convert_to_dataframe
 from data.load_binance_history import load_historical_btc_stats_from_binance
+from data.esthetic.ohlc_tools import generate_candles
+
 
 
 grouped = None
@@ -58,7 +60,7 @@ def on_message(ws, message):
 
 
     message_count += 1
-    if message_count >= 100:
+    if message_count >= 1000:
         print("10 messages reçus. Arrêt du WebSocket.")
         ws.close()
 
@@ -93,13 +95,22 @@ def calculate_btc_stats_per_second():
 
         previous = last_stats.get(sec)
 
-        if previous is None or previous['mean_price'] != mean_price or previous['total_volume'] != total_volume:
-            print(f"📊 Prix moyen BTC ACTUALISÉ — {sec} : {mean_price} USDT | Volume échangé : {total_volume}")
-            last_stats[sec] = {
-                'mean_price': mean_price,
-                'total_volume': total_volume
-            }
-    print(grouped)
+
+    ##################
+    
+    ### ✅ Générer les bougies 1min (optionnel, affichage ou stratégie) ###
+
+    try:
+        from data.esthetic.ohlc_tools import generate_candles
+        candles_df = generate_candles(grouped, timeframe="1min")
+        print("🕯️ Bougies OHLC 1min :")
+        print(candles_df.tail(3))
+    except Exception as e:
+        print(f"Erreur lors du calcul des bougies : {e}")
+    # print(grouped)
+
+    ##################
+    
     return grouped
 
 

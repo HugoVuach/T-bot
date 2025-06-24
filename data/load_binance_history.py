@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 
-def load_historical_btc_stats_from_binance(hours=10):
+def load_historical_btc_stats_from_binance(hours=1):
     """
     Récupère les dernières `hours` heures de BTC/USDT depuis l'API Binance
     et retourne un DataFrame au format :
