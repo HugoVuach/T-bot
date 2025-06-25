@@ -47,13 +47,51 @@ import matplotlib.dates as mdates
 # INDICATOR_YLIM = (0, 100)
 
 # === CCI (Commodity Channel Index) ===
-from indicators.cci import CCI
-INDICATOR_CLASS = CCI
-INDICATOR_NAME = "CCI_Value"
-INDICATOR_PARAMS = {"period": 20}
-INDICATOR_COLOR = "orange"
-INDICATOR_LINE_LEVELS = [100, -100]
-INDICATOR_YLIM = (-200, 200)
+# from indicators.cci import CCI
+# INDICATOR_CLASS = CCI
+# INDICATOR_NAME = "CCI_Value"
+# INDICATOR_PARAMS = {"period": 20}
+# INDICATOR_COLOR = "orange"
+# INDICATOR_LINE_LEVELS = [100, -100]
+# INDICATOR_YLIM = (-200, 200)
+
+# === Roc (Rate of Change) ===
+# from indicators.roc import ROC
+# INDICATOR_CLASS = ROC
+# INDICATOR_NAME = "ROC_Value"
+# INDICATOR_PARAMS = {"period": 12}
+# INDICATOR_COLOR = "darkcyan"
+# INDICATOR_LINE_LEVELS = [0]
+# INDICATOR_YLIM = (-0.6, 0.6)
+
+# === Momentum ===
+# from indicators.momentum import Momentum
+# INDICATOR_CLASS = Momentum
+# INDICATOR_NAME = "Momentum_Value"
+# INDICATOR_PARAMS = {"period": 10}
+# INDICATOR_COLOR = "black"
+# INDICATOR_LINE_LEVELS = [0]
+# INDICATOR_YLIM = (-1000, 1000)  # à ajuster selon volatilité
+
+# === Williams %R ===
+# from indicators.williamsr import WilliamsR
+# INDICATOR_CLASS = WilliamsR
+# INDICATOR_NAME = "WilliamsR"
+# INDICATOR_PARAMS = {"period": 14}
+# INDICATOR_COLOR = "darkblue"
+# INDICATOR_LINE_LEVELS = [-20, -80]
+# INDICATOR_YLIM = (-100, 0)
+
+# === Ultimate oscillatot ===
+from indicators.ultimate import UltimateOscillator
+INDICATOR_CLASS = UltimateOscillator
+INDICATOR_NAME = "Ultimate"
+INDICATOR_PARAMS = {"short": 7, "medium": 14, "long": 28}
+INDICATOR_COLOR = "darkgreen"
+INDICATOR_LINE_LEVELS = [70, 30]
+INDICATOR_YLIM = (0, 100)
+
+
 
 
 
