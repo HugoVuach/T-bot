@@ -1,4 +1,4 @@
-from indicators.base import Indicator
+from dashboard.A.indicators.momentum_indicator.base import Indicator
 
 class CCI(Indicator):
     def compute(self):
@@ -19,3 +19,13 @@ class CCI(Indicator):
         # Pour intégration graphique
         self.df['CCI_Value'] = self.df['CCI']
         return self.df
+
+
+# === CCI (Commodity Channel Index) ===
+# from indicators.momentum_indicator.cci import CCI
+# INDICATOR_CLASS = CCI
+# INDICATOR_NAME = "CCI_Value"
+# INDICATOR_PARAMS = {"period": 20}
+# INDICATOR_COLOR = "orange"
+# INDICATOR_LINE_LEVELS = [100, -100]
+# INDICATOR_YLIM = (-200, 200)

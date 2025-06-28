@@ -10,86 +10,26 @@ import pytz
 import matplotlib.dates as mdates
 
 
-
-
-# === Paramètres dynamiques de l’indicateur ===
-
-# === RSI ===
-# from indicators.rsi import RSI
-# INDICATOR_CLASS = RSI
-# INDICATOR_NAME = "RSI"
-# INDICATOR_PARAMS = {"period": 14}
-# INDICATOR_COLOR = "purple"
-# INDICATOR_LINE_LEVELS = [70, 30]
-# INDICATOR_YLIM = (0, 100)
-
-# === Stochastic Oscillator ===
-# from indicators.stochastic import StochasticOscillator
-# INDICATOR_CLASS = StochasticOscillator
-# INDICATOR_NAME = "Stochastic"
-# INDICATOR_PARAMS = {"k_period": 14, "d_period": 3}
-# INDICATOR_COLOR = "blue"
-# INDICATOR_LINE_LEVELS = [80, 20]
-# INDICATOR_YLIM = (0, 100)
-
-# === Stochastic RSI ===
-# from indicators.stochrsi import StochasticRSI
-# INDICATOR_CLASS = StochasticRSI
-# INDICATOR_NAME = "StochasticRSI"
-# INDICATOR_PARAMS = {
- #   "rsi_period": 14,
- #   "stoch_period": 14,
-  #  "smooth_k": 3,
-   # "smooth_d": 3
-#}
-# INDICATOR_COLOR = "blue"
-# INDICATOR_LINE_LEVELS = [80, 20]
-# INDICATOR_YLIM = (0, 100)
-
-# === CCI (Commodity Channel Index) ===
-# from indicators.cci import CCI
-# INDICATOR_CLASS = CCI
-# INDICATOR_NAME = "CCI_Value"
-# INDICATOR_PARAMS = {"period": 20}
-# INDICATOR_COLOR = "orange"
-# INDICATOR_LINE_LEVELS = [100, -100]
-# INDICATOR_YLIM = (-200, 200)
-
-# === Roc (Rate of Change) ===
-# from indicators.roc import ROC
-# INDICATOR_CLASS = ROC
-# INDICATOR_NAME = "ROC_Value"
-# INDICATOR_PARAMS = {"period": 12}
-# INDICATOR_COLOR = "darkcyan"
-# INDICATOR_LINE_LEVELS = [0]
-# INDICATOR_YLIM = (-0.6, 0.6)
-
-# === Momentum ===
-# from indicators.momentum import Momentum
-# INDICATOR_CLASS = Momentum
-# INDICATOR_NAME = "Momentum_Value"
+# === Importer sous la forme suivante pour le 3 eme plot ===
+# from indicators.momentum import X
+# INDICATOR_CLASS = X
+# INDICATOR_NAME = "X"
 # INDICATOR_PARAMS = {"period": 10}
 # INDICATOR_COLOR = "black"
-# INDICATOR_LINE_LEVELS = [0]
-# INDICATOR_YLIM = (-1000, 1000)  # à ajuster selon volatilité
+# INDICATOR_LINE_LEVELS = [a, b]
+# INDICATOR_YLIM = (-c, d)  
 
-# === Williams %R ===
-# from indicators.williamsr import WilliamsR
-# INDICATOR_CLASS = WilliamsR
-# INDICATOR_NAME = "WilliamsR"
-# INDICATOR_PARAMS = {"period": 14}
-# INDICATOR_COLOR = "darkblue"
-# INDICATOR_LINE_LEVELS = [-20, -80]
-# INDICATOR_YLIM = (-100, 0)
 
-# === Ultimate oscillatot ===
-from indicators.ultimate import UltimateOscillator
-INDICATOR_CLASS = UltimateOscillator
-INDICATOR_NAME = "Ultimate"
-INDICATOR_PARAMS = {"short": 7, "medium": 14, "long": 28}
-INDICATOR_COLOR = "darkgreen"
-INDICATOR_LINE_LEVELS = [70, 30]
-INDICATOR_YLIM = (0, 100)
+
+# === ATR ===
+from indicators.volatility_indicator.atr import ATR
+INDICATOR_CLASS = ATR
+INDICATOR_NAME = "ATR_Value"
+INDICATOR_PARAMS = {"period": 14}
+INDICATOR_COLOR = "orange"
+INDICATOR_LINE_LEVELS = []
+INDICATOR_YLIM = (0, 60)  # axe automatique
+
 
 
 
@@ -160,7 +100,7 @@ ws_thread.daemon = True
 ws_thread.start()
 
 # === Matplotlib : 3 sous-graphiques (chandeliers + volumes + indicateurs) ===
-fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(15, 9), sharex=True, gridspec_kw={'height_ratios': [3, 1, 1]})
+fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(14, 7), sharex=True, gridspec_kw={'height_ratios': [3, 1, 1]})
 
 def animate(i):
     if candles.empty:

@@ -13,3 +13,13 @@ class RSI(Indicator):
         rs = avg_gain / avg_loss
         self.df['RSI'] = 100 - (100 / (1 + rs))
         return self.df
+
+
+# === RSI ===
+# from indicators.momentum_indicator.rsi import RSI
+# INDICATOR_CLASS = RSI
+# INDICATOR_NAME = "RSI"
+# INDICATOR_PARAMS = {"period": 14}
+# INDICATOR_COLOR = "purple"
+# INDICATOR_LINE_LEVELS = [70, 30]
+# INDICATOR_YLIM = (0, 100)

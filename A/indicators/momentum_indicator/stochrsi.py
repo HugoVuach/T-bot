@@ -1,4 +1,4 @@
-from indicators.base import Indicator
+from dashboard.A.indicators.momentum_indicator.base import Indicator
 
 class StochasticRSI(Indicator):
     def compute(self):
@@ -29,3 +29,18 @@ class StochasticRSI(Indicator):
         # Pour affichage dynamique : on trace %K
         self.df['StochasticRSI'] = self.df['StochRSI_%K']
         return self.df
+
+
+# === Stochastic RSI ===
+# from indicators.momentum_indicator.stochrsi import StochasticRSI
+# INDICATOR_CLASS = StochasticRSI
+# INDICATOR_NAME = "StochasticRSI"
+# INDICATOR_PARAMS = {
+ #   "rsi_period": 14,
+ #   "stoch_period": 14,
+  #  "smooth_k": 3,
+   # "smooth_d": 3
+#}
+# INDICATOR_COLOR = "blue"
+# INDICATOR_LINE_LEVELS = [80, 20]
+# INDICATOR_YLIM = (0, 100)

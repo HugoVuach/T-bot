@@ -1,4 +1,4 @@
-from indicators.base import Indicator
+from dashboard.A.indicators.momentum_indicator.base import Indicator
 
 class WilliamsR(Indicator):
     def compute(self):
@@ -12,3 +12,12 @@ class WilliamsR(Indicator):
         # Pour affichage automatique
         self.df['WilliamsR'] = self.df['Williams_%R']
         return self.df
+
+# === Williams %R ===
+# from indicators.momentum_indicator.williamsr import WilliamsR
+# INDICATOR_CLASS = WilliamsR
+# INDICATOR_NAME = "WilliamsR"
+# INDICATOR_PARAMS = {"period": 14}
+# INDICATOR_COLOR = "darkblue"
+# INDICATOR_LINE_LEVELS = [-20, -80]
+# INDICATOR_YLIM = (-100, 0)
